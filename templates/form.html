@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dabbawala Time Prediction &middot; Predict</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep: #081726;
+    --navy-mid: #123259;
+    --cream: #F7F2E7;
+    --cream-dim: #EDE6D6;
+    --maroon: #8A3B2E;
+    --marigold: #E3A008;
+    --cyan: #29B6F6;
+    --ink: #201B14;
+    --ink-soft: #5B5346;
+    --ring: rgba(41,182,246,0.45);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 0%, #14345C 0%, transparent 45%),
+      radial-gradient(circle at 90% 10%, #163A66 0%, transparent 40%),
+      var(--navy-deep);
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 48px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .brand svg{width:30px;height:30px;}
+  .brand span{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--cream);
+  }
+  .back-link{
+    color:#A9BBD1;
+    text-decoration:none;
+    font-size:0.85rem;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .back-link:hover{color:#fff;}
+
+  .wrap{max-width:760px;margin:0 auto;padding:48px 20px 90px;}
+
+  header.page-head{margin-bottom:8px;}
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--cyan);
+    margin:0 0 4px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.9rem;
+    line-height:1.1;
+    margin:0;
+  }
+  .lede{
+    color:#C7C2B4;
+    font-size:0.95rem;
+    max-width:56ch;
+    margin:14px 0 22px;
+  }
+
+  .progress-track{
+    height:6px;
+    border-radius:999px;
+    background:#1B3A5C;
+    overflow:hidden;
+    margin-bottom:6px;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--maroon), var(--marigold));
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    color:#8A9BB4;
+    margin:0 0 28px;
+  }
+
+  form{
+    background:var(--cream);
+    color:var(--ink);
+    border-radius:18px;
+    padding:8px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+
+  .tier{
+    padding:26px 30px;
+    border-bottom:2px dashed #DCD3BC;
+  }
+  .tier:last-of-type{border-bottom:none;}
+
+  .tier-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .tier-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:0.78rem;
+    color:var(--cream);
+    background:var(--maroon);
+    width:26px;height:26px;
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .tier-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.08rem;
+    color:var(--ink);
+  }
+  .tier-sub{
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-left:38px;
+    margin-top:-14px;
+    margin-bottom:16px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px 18px;
+  }
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1 / -1;}
+
+  label{
+    font-size:0.72rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+
+  input, select{
+    font-family:'Inter', sans-serif;
+    font-size:0.95rem;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1.5px solid #D9CFB4;
+    background:#FFFDF8;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus, select:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 3px var(--ring);
+  }
+
+  .hint{font-size:0.72rem;color:#8A8069;margin-top:2px;}
+
+  /* ---------- Tiffin submit button ---------- */
+  .submit-row{
+    padding:34px 30px 38px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+  }
+  .dabba-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    transition:transform .15s ease;
+  }
+  .dabba-btn:hover{transform:translateY(-4px) scale(1.03);}
+  .dabba-btn:active{transform:translateY(0) scale(0.98);}
+  .dabba-btn svg{
+    width:88px;
+    filter:drop-shadow(0 12px 22px rgba(0,0,0,0.28));
+  }
+  .dabba-btn .tap-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:0.78rem;
+    color:var(--maroon);
+  }
+  .dabba-btn.loading svg{animation: wiggle .5s ease-in-out infinite;}
+  @keyframes wiggle{
+    0%,100%{transform:rotate(0deg);}
+    25%{transform:rotate(-4deg);}
+    75%{transform:rotate(4deg);}
+  }
+
+  footer{
+    text-align:center;
+    color:#5A6B85;
+    font-size:0.75rem;
+    margin-top:36px;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(6,14,26,0.72);
+    backdrop-filter:blur(3px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-card{
+    background:var(--navy-mid);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:20px;
+    padding:38px 40px;
+    max-width:380px;
+    width:100%;
+    text-align:center;
+    animation: pop .28s cubic-bezier(.2,1.4,.4,1) both;
+    position:relative;
+  }
+  @keyframes pop{
+    from{opacity:0; transform:scale(0.85) translateY(10px);}
+    to{opacity:1; transform:scale(1) translateY(0);}
+  }
+  .modal-close{
+    position:absolute; top:14px; right:16px;
+    background:none; border:none; color:#A9BBD1;
+    font-size:1.1rem; cursor:pointer;
+  }
+  .modal-close:hover{color:#fff;}
+  .modal-card .modal-kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--cyan);
+    margin:0 0 14px;
+  }
+  .modal-value{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:3rem;
+    font-weight:600;
+    color:var(--marigold);
+    margin:0;
+  }
+  .modal-value span{font-size:1.1rem;color:#C7C2B4;margin-left:8px;}
+  .modal-note{color:#A9BBD1;font-size:0.82rem;margin:16px 0 0;}
+  .modal-card.error .modal-value{color:#E88A7C;font-size:1.3rem;font-family:'Inter',sans-serif;font-weight:600;}
+
+  @media (max-width:600px){
+    .grid{grid-template-columns:1fr;}
+    .tier{padding:22px 18px;}
+    h1{font-size:1.5rem;}
+    nav{padding:14px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 14 C20 9 24 6 28 8 L28 12" stroke="#3A2A1E" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <rect x="14" y="16" width="28" height="10" rx="3" fill="#E3A008"/>
+      <rect x="14" y="26" width="28" height="10" rx="1" fill="#8A3B2E"/>
+      <rect x="14" y="36" width="28" height="12" rx="3" fill="#1B6B8C"/>
+      <ellipse cx="28" cy="16" rx="14" ry="3.4" fill="#F4C15B"/>
+    </svg>
+    <span>Dabbawala</span>
+  </a>
+  <a class="back-link" href="/">&larr; Back to home</a>
+</nav>
+
+<div class="wrap">
+
+  <header class="page-head">
+    <p class="kicker">Step 2 of 2</p>
+    <h1>Enter Order Details</h1>
+  </header>
+  <p class="lede">Fill in the order the way it would arrive on a dabbawala's lid code &mdash; route, tin, and payment details. Tap the dabba at the bottom to get your estimate.</p>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+  <p class="progress-label" id="progress-label">0 of 13 fields filled</p>
+
+  <form id="predict-form">
+
+    <div class="tier">
+      <div class="tier-head">
+        <span class="tier-num">01</span>
+        <span class="tier-title">Route</span>
+      </div>
+      <p class="tier-sub">Where the tiffin starts, where it ends, and when.</p>
+      <div class="grid">
+        <div class="field">
+          <label for="pickup_area">Pickup area</label>
+          <select name="pickup_area" id="pickup_area" required>
+            {% for a in options.pickup_area %}
+            <option value="{{ a }}">{{ a }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="delivery_area">Delivery area</label>
+          <select name="delivery_area" id="delivery_area" required>
+            {% for a in options.delivery_area %}
+            <option value="{{ a }}">{{ a }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="distance_km">Distance (km)</label>
+          <input type="number" step="0.01" min="0" name="distance_km" id="distance_km" placeholder="e.g. 12.5" required>
+          <p class="hint">Bucket: <span id="distance-bucket">&mdash;</span></p>
+        </div>
+        <div class="field">
+          <label for="order_date">Order date</label>
+          <input type="date" name="order_date" id="order_date" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <span class="tier-num">02</span>
+        <span class="tier-title">The Tiffin</span>
+      </div>
+      <p class="tier-sub">What's in the carrier and who it's going to.</p>
+      <div class="grid">
+        <div class="field">
+          <label for="tiffin_type">Tiffin type</label>
+          <select name="tiffin_type" id="tiffin_type" required>
+            {% for t in options.tiffin_type %}
+            <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="tiffin_weight_kg">Tiffin weight (kg)</label>
+          <input type="number" step="0.01" min="0" name="tiffin_weight_kg" id="tiffin_weight_kg" placeholder="e.g. 1.5" required>
+        </div>
+        <div class="field">
+          <label for="customer_type">Customer type</label>
+          <select name="customer_type" id="customer_type" required>
+            {% for c in options.customer_type %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="monthly_subscription">Monthly subscription</label>
+          <select name="monthly_subscription" id="monthly_subscription" required>
+            {% for m in options.monthly_subscription %}
+            <option value="{{ m }}">{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <span class="tier-num">03</span>
+        <span class="tier-title">Logistics</span>
+      </div>
+      <p class="tier-sub">Who is carrying it, and how the run is going so far.</p>
+      <div class="grid">
+        <div class="field">
+          <label for="dabbawala_id">Dabbawala ID</label>
+          <select name="dabbawala_id" id="dabbawala_id" required>
+            {% for d in options.dabbawala_id %}
+            <option value="{{ d }}">{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="status">Order status</label>
+          <select name="status" id="status" required>
+            {% for s in options.status %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
+          <p class="hint">For a genuine pre-delivery estimate, "Delivered" is the safest default.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="tier-head">
+        <span class="tier-num">04</span>
+        <span class="tier-title">Payment &amp; Feedback</span>
+      </div>
+      <p class="tier-sub">Closes out the order record.</p>
+      <div class="grid">
+        <div class="field">
+          <label for="payment_mode">Payment mode</label>
+          <select name="payment_mode" id="payment_mode" required>
+            {% for p in options.payment_mode %}
+            <option value="{{ p }}">{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="charge_inr">Charge (INR)</label>
+          <input type="number" step="0.01" min="0" name="charge_inr" id="charge_inr" placeholder="e.g. 120.00" required>
+        </div>
+        <div class="field full">
+          <label for="customer_feedback">Customer feedback</label>
+          <select name="customer_feedback" id="customer_feedback" required>
+            {% for f in feedback_options %}
+            <option value="{{ f }}">{{ f }}</option>
+            {% endfor %}
+          </select>
+          <p class="hint">Feedback is normally given after delivery &mdash; use "Not Available" when estimating ahead of time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="dabba-btn" id="dabba-btn" aria-label="Predict delivery time">
+        <svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+          <path d="M70 46 C70 20 130 20 130 46" stroke="#3A2A1E" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="100" cy="48" rx="46" ry="12" fill="#3A2A1E"/>
+          <ellipse cx="100" cy="44" rx="40" ry="10" fill="#F4C15B"/>
+          <rect x="58" y="50" width="84" height="42" rx="10" fill="#E3A008"/>
+          <rect x="58" y="90" width="84" height="42" rx="4" fill="#8A3B2E"/>
+          <rect x="58" y="130" width="84" height="42" rx="4" fill="#1B6B8C"/>
+          <rect x="58" y="170" width="84" height="46" rx="10" fill="#123B54"/>
+          <rect x="58" y="88" width="84" height="6" fill="#3A2A1E" opacity="0.35"/>
+          <rect x="58" y="128" width="84" height="6" fill="#3A2A1E" opacity="0.35"/>
+          <rect x="58" y="168" width="84" height="6" fill="#3A2A1E" opacity="0.35"/>
+          <rect x="68" y="58" width="10" height="150" fill="#ffffff" opacity="0.10"/>
+        </svg>
+        <span class="tap-label" id="tap-label">Tap the dabba to predict</span>
+      </button>
+    </div>
+  </form>
+
+  <footer>Dabbawala Logistics Capstone &middot; Flask deployment</footer>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-card" id="modal-card">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <p class="modal-kicker" id="modal-kicker">Estimated delivery time</p>
+    <p class="modal-value" id="modal-value">0<span>min</span></p>
+    <p class="modal-note" id="modal-note">Predicted by the Linear Regression model (Test R&sup2; &asymp; 0.93) from Section 10 of the capstone notebook.</p>
+  </div>
+</div>
+
+<script>
+  // --- Live distance -> bucket preview (mirrors distance_bin() in app.py) ---
+  const distanceInput = document.getElementById('distance_km');
+  const bucketLabel = document.getElementById('distance-bucket');
+  function updateBucket(){
+    const v = parseFloat(distanceInput.value);
+    if (isNaN(v)) { bucketLabel.textContent = '\u2014'; return; }
+    if (v <= 8) bucketLabel.textContent = 'Short';
+    else if (v <= 16) bucketLabel.textContent = 'Medium';
+    else bucketLabel.textContent = 'Long';
+  }
+  if (distanceInput) distanceInput.addEventListener('input', updateBucket);
+
+  // --- Live "N of 13 fields filled" progress bar ---
+  const form = document.getElementById('predict-form');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  function updateProgress(){
+    const fields = form.querySelectorAll('input[required], select[required]');
+    const total = fields.length;
+    let filled = 0;
+    fields.forEach(f => { if (f.value && f.value.trim() !== '') filled++; });
+    const pct = total ? Math.round((filled / total) * 100) : 0;
+    fill.style.width = pct + '%';
+    label.textContent = filled + ' of ' + total + ' fields filled';
+  }
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+  updateProgress();
+
+  // --- Modal helpers ---
+  const overlay = document.getElementById('modal-overlay');
+  const modalCard = document.getElementById('modal-card');
+  const modalKicker = document.getElementById('modal-kicker');
+  const modalValue = document.getElementById('modal-value');
+  const modalNote = document.getElementById('modal-note');
+  const modalClose = document.getElementById('modal-close');
+
+  function openModal(){ overlay.classList.add('open'); }
+  function closeModal(){ overlay.classList.remove('open'); }
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+  function showResult(minutes){
+    modalCard.classList.remove('error');
+    modalKicker.textContent = 'Estimated delivery time';
+    modalNote.textContent = 'Predicted by the Linear Regression model (Test R\u00b2 \u2248 0.93) from Section 10 of the capstone notebook.';
+    modalValue.innerHTML = '0<span>min</span>';
+    openModal();
+    let current = 0;
+    const steps = 24;
+    const increment = minutes / steps;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= minutes){ current = minutes; clearInterval(timer); }
+      modalValue.innerHTML = current.toFixed(1) + '<span>min</span>';
+    }, 20);
+  }
+
+  function showError(message){
+    modalCard.classList.add('error');
+    modalKicker.textContent = 'Couldn\u2019t score that order';
+    modalValue.textContent = message;
+    modalNote.textContent = 'Check the fields above and try again.';
+    openModal();
+  }
+
+  // --- Submit via fetch, keep the user on this page, show popup ---
+  const dabbaBtn = document.getElementById('dabba-btn');
+  const tapLabel = document.getElementById('tap-label');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+    dabbaBtn.classList.add('loading');
+    tapLabel.textContent = 'Predicting\u2026';
+    try {
+      const formData = new FormData(form);
+      const res = await fetch('/predict', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (res.ok && data.result !== undefined) {
+        showResult(data.result);
+      } else {
+        showError(data.error || 'Something went wrong.');
+      }
+    } catch (err) {
+      showError('Network error \u2014 is the server running?');
+    } finally {
+      dabbaBtn.classList.remove('loading');
+      tapLabel.textContent = 'Tap the dabba to predict';
+    }
+  });
+</script>
+</body>
+</html>
