@@ -14,9 +14,9 @@
 
 # 🚀 Live Demo
 
-## 🌐 **Try the application here**
+### 🌐 **Try the application here**
 
-### **👉 https://dabbawala-delivery-time-prediction.onrender.com/**
+## 👉 **[Dabbawala Delivery Time Prediction (Live)](https://dabbawala-delivery-time-prediction.onrender.com/)**
 
 > **Note:** Since the application is hosted on Render's free tier, the first request after inactivity may take **30–50 seconds** to wake up.
 
