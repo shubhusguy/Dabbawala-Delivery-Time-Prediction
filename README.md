@@ -12,6 +12,16 @@
 
 ---
 
+# 🚀 Live Demo
+
+## 🌐 **Try the application here**
+
+### **👉 https://dabbawala-delivery-time-prediction.onrender.com/**
+
+> **Note:** Since the application is hosted on Render's free tier, the first request after inactivity may take **30–50 seconds** to wake up.
+
+---
+
 ## 📖 The Story
 
 Every morning, before Mumbai fully wakes up, an army of dabbawalas is already in motion — cycling, sorting, stacking, and hand-delivering over **100,000 home-cooked tiffins** across the city with a punctuality that Harvard Business School once studied as a case in operational excellence.
@@ -38,31 +48,46 @@ Output: 🕒 Estimated delivery time: 38.4 minutes
 ## 🧠 Under the Hood
 
 ### The Data Journey
+
 ```
-Raw Orders  →  Feature Engineering  →  Encoding & Scaling  →  Model Training  →  Deployment
+Raw Orders
+      ↓
+Feature Engineering
+      ↓
+Encoding & Scaling
+      ↓
+Model Training
+      ↓
+Deployment
 ```
 
-**Engineered features** (the real secret sauce):
+### Engineered Features
+
 | Feature | What it captures |
-|---|---|
+|----------|------------------|
 | `route_frequency` | How often this pickup→delivery path is travelled |
 | `dabbawala_workload` | How busy a specific dabbawala typically is |
 | `distance_category` | Short / Medium / Long distance banding |
 | `customer_feedback_encoded` | Historical service rating, numerically encoded |
 | `is_weekend` | Whether the order falls on a weekend |
 
-### The Model Bake-Off
+---
+
+## 📊 Model Performance
+
 Four contenders entered. One generalized best.
 
 | Model | Train R² | Test R² | Test RMSE | Test MAE |
-|---|---|---|---|---|
-| **Linear Regression** 🏆 | 0.9267 | **0.9279** | 4.51 | 3.55 |
+|------|---------:|---------:|----------:|---------:|
+| 🏆 **Linear Regression** | **0.9267** | **0.9279** | **4.51** | **3.55** |
 | Gradient Boosting | 0.9308 | 0.9192 | 4.77 | 3.81 |
 | XGBoost | 0.9276 | 0.9166 | 4.85 | 3.87 |
 | Random Forest (Tuned) | 0.9105 | 0.8842 | 5.71 | 4.54 |
 | Random Forest | 0.8667 | 0.8454 | 6.60 | 5.17 |
 
-The plot twist: the fanciest models *memorized* the training data harder but **generalized worse**. Plain old Linear Regression, with well-engineered features underneath it, quietly won. Sometimes the boring model is the right model.
+The plot twist: the fanciest models memorized the training data harder but **generalized worse**.
+
+**Linear Regression won because good feature engineering matters more than model complexity.**
 
 ---
 
@@ -70,13 +95,13 @@ The plot twist: the fanciest models *memorized* the training data harder but **g
 
 ```
 dabbawala-time-predictor/
-├── app.py                  # Flask app — routes, feature engineering, prediction
-├── model.pkl               # Trained pipeline + encoders + lookup tables
-├── requirements.txt        # Python dependencies
-├── Procfile                # Render/gunicorn entrypoint
+├── app.py
+├── model.pkl
+├── requirements.txt
+├── Procfile
 └── templates/
-    ├── index.html          # Landing page — the pitch
-    └── form.html           # The actual prediction form
+    ├── index.html
+    └── form.html
 ```
 
 ---
@@ -84,28 +109,41 @@ dabbawala-time-predictor/
 ## ⚙️ Tech Stack
 
 | Layer | Tools |
-|---|---|
-| **Modeling** | scikit-learn, pandas, numpy |
-| **Backend** | Flask, gunicorn |
-| **Frontend** | HTML, CSS, vanilla JS (no frameworks — just a dabba and a button) |
-| **Deployment** | GitHub + Render (free tier) |
+|-------|-------|
+| Machine Learning | scikit-learn, pandas, numpy |
+| Backend | Flask, Gunicorn |
+| Frontend | HTML, CSS, JavaScript |
+| Deployment | GitHub + Render |
 
 ---
 
-## 🚀 Running It Locally
+# 🌍 Run the Live Application
+
+### **🔗 https://dabbawala-delivery-time-prediction.onrender.com/**
+
+No installation required—simply open the link above in your browser and start predicting delivery times.
+
+---
+
+## 💻 Running Locally
 
 ```bash
-# 1. Clone the repo
+# Clone repository
 git clone https://github.com/<your-username>/dabbawala-time-predictor.git
+
+# Move into project
 cd dabbawala-time-predictor
 
-# 2. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 3. Run the app
+# Start Flask server
 python app.py
+```
 
-# 4. Open in browser
+Open:
+
+```
 http://localhost:8080
 ```
 
@@ -113,54 +151,85 @@ http://localhost:8080
 
 ## 🔌 API Reference
 
-### `POST /predict`
+### POST `/predict`
 
-Send order details as form data, get back a delivery time estimate.
+Accepts order information as form data and returns the estimated delivery time.
 
-**Request** (`multipart/form-data`):
+### Request Fields
+
 ```
-order_date, pickup_area, delivery_area, dabbawala_id,
-distance_km, tiffin_weight_kg, charge_inr, customer_type,
-tiffin_type, status, payment_mode, monthly_subscription,
+order_date
+pickup_area
+delivery_area
+dabbawala_id
+distance_km
+tiffin_weight_kg
+charge_inr
+customer_type
+tiffin_type
+status
+payment_mode
+monthly_subscription
 customer_feedback
 ```
 
-**Response:**
+### Success Response
+
 ```json
-{ "result": 38.4 }
+{
+    "result": 38.4
+}
 ```
 
-**On error:**
+### Error Response
+
 ```json
-{ "error": "description of what went wrong" }
+{
+    "error": "description of what went wrong"
+}
 ```
 
 ---
 
 ## 🎯 Why This Matters
 
-- **For dispatchers** — flag orders at risk of running long, *before* they run long.
-- **For customers** — know roughly when your lunch is arriving, without calling anyone.
-- **For the network** — a small data-backed nudge on top of a century-old system that never really needed one, but might appreciate one anyway.
+- Predict delivery time before dispatch.
+- Improve customer expectations.
+- Assist operational planning.
+- Demonstrate end-to-end Machine Learning deployment.
 
 ---
 
-## ⚠️ Honest Limitations
+## ⚠️ Limitations
 
-- `route_frequency` and `dabbawala_workload` are computed on the full dataset before the train/test split — a mild source of information leakage worth knowing about if you're presenting these R² numbers as fully out-of-sample.
-- The model is trained on a specific slice of Mumbai's dabbawala operations — it won't generalize to other cities or delivery networks out of the box.
-- Free-tier hosting means the live demo may take ~30–50 seconds to wake up if it's been idle. That's Render being frugal, not the model being slow.
+- `route_frequency` and `dabbawala_workload` are computed before the train/test split, introducing mild information leakage.
+- Model is trained specifically on Mumbai Dabbawala operations.
+- Render free tier may require **30–50 seconds** for the first request after inactivity.
 
 ---
 
 ## 🙏 Credits
 
-Built as a capstone project exploring end-to-end ML deployment — from raw logistics data to a live, publicly accessible prediction tool.
+Built as a capstone Machine Learning project exploring the complete ML lifecycle—from data preprocessing and feature engineering to deployment.
 
-Inspired by the actual dabbawalas of Mumbai, whose real-world error rate is roughly **1 in 6 million deliveries** — a bar this model doesn't claim to clear, but was fun to chase.
+Inspired by Mumbai's legendary Dabbawalas, whose real-world error rate is approximately **1 in 6 million deliveries**.
 
 ---
 
-<p align="center"><i>🍱 Made with pandas, patience, and a healthy respect for people who deliver lunch better than most logistics companies deliver anything.</i></p>
+<p align="center">
+<b>🌐 Live Demo</b><br><br>
 
-<p align="center"><b>Shubham Pote</b><br>Imarticus Learning</p>
+👉 <b>https://dabbawala-delivery-time-prediction.onrender.com/</b>
+
+</p>
+
+---
+
+<p align="center">
+<i>🍱 Made with pandas, patience, and a healthy respect for the people who deliver lunch better than most logistics companies deliver anything.</i>
+</p>
+
+<p align="center">
+<b>Shubham Pote</b><br>
+Imarticus Learning
+</p>
